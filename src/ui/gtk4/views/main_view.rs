@@ -1,17 +1,6 @@
-use std::rc::Rc;
 use gtk4::{gdk, style_context_add_provider_for_display, ApplicationWindow, Builder, CssProvider, GestureClick, GridView, Label, ListItem, MultiSelection, NoSelection, Orientation, SignalListItemFactory, SingleSelection, StringObject, Widget, Window};
-use gtk4::gio::ListStore;
 use gtk4::prelude::{BoxExt, Cast, EventControllerExt, GestureSingleExt, GtkWindowExt, ListItemExt, ListModelExt, SelectionModelExt, StaticType, WidgetExt};
 
-use std::cell::{Cell, RefCell};
-use std::collections::{HashMap, VecDeque};
-use std::fmt::format;
-use std::process::exit;
-use std::sync::{Arc, Mutex};
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::thread;
-use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
-use rdev::{listen, EventType, Key};
 use crate::ui::gtk4::views::inter::stackable::Stackable;
 use crate::ui::gtk4::windows::main_window::MainWindow;
 

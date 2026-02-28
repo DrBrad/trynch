@@ -21,7 +21,7 @@ impl App {
     pub fn run(&self) {
         self.app.connect_activate(move |app| {
             if let Some(settings) = Settings::default() {
-                settings.set_property("gtk-application-prefer-dark-theme", &true);
+                settings.set_property("gtk-application-prefer-dark-theme", true);
             }
 
             let resource_data = include_bytes!("../../../res/resources.gresources");
@@ -35,7 +35,18 @@ impl App {
 
             style_context_add_provider_for_display(&gdk::Display::default().unwrap(), &provider, gtk4::STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-            //provider.load_from_resource("/trynch/rust/res/ui/theme.css");
+            /*
+            #[cfg(target_os = "macos")]
+            {
+            }
+            */
+
+            let builder = Builder::from_resource("/trynch/rust/res/ui/trynch_ui.xml");
+            let model: gio::Menu = builder
+                .object("window_menu")
+                .expect("Couldn't find 'window_menu' in trynch_ui.xml");
+
+            app.set_menubar(Some(&model));
 
             MainWindow::new(&app);
 

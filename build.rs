@@ -4,8 +4,8 @@ rustup install nightly
 rustup override set nightly
 
 TESTING
-//export GTK_DEBUG=interactive
-//$env:GTK_DEBUG="interactive"
+export GTK_DEBUG=interactive
+$env:GTK_DEBUG="interactive"
 
 COMPILE
 glib-compile-resources res/gtk4/linux.gresources.xml --target=res/resources.gresources

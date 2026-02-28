@@ -73,13 +73,6 @@ impl MainWindow {
 
         _self.window.show();
 
-        _self.window.present();
-
-        #[cfg(windows)]
-        {
-            force_always_on_top_win32(_self.window.as_ref());
-        }
-
         _self
     }
 
