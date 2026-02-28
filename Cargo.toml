@@ -1,0 +1,28 @@
+cargo-features = ["profile-rustflags"]
+
+[package]
+name = "trynch"
+version = "0.1.0"
+edition = "2024"
+
+[profile.dev]
+opt-level = 0
+debug = true
+rustflags = ["--cfg", "profile=\"debug\""]
+
+[profile.release]
+opt-level = 3
+debug = false
+rustflags = ["--cfg", "profile=\"release\""]
+
+[profile.nightly]
+inherits = "dev"
+opt-level = 0
+debug = true
+split-debuginfo = "off"
+rustflags = ["--cfg", "profile=\"nightly\""]
+
+[dependencies]
+gtk4 = "0.9.7"
+rdev = "0.5.3"
+rusb = "0.9"
