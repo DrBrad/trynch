@@ -2,6 +2,7 @@ use gtk4::{gdk, gio, style_context_add_provider_for_display, Application, Builde
 use gtk4::gio::{resources_register, ApplicationFlags, Resource};
 use gtk4::glib::Bytes;
 use gtk4::prelude::{ApplicationExt, ApplicationExtManual, FileExt, GtkApplicationExt, ObjectExt, StaticType, StyleContextExt};
+use crate::ui::gtk4::widgets::rounded_picture::RoundedPicture;
 use crate::ui::gtk4::windows::main_window::MainWindow;
 
 pub struct App {
@@ -19,6 +20,8 @@ impl App {
     }
 
     pub fn run(&self) {
+        RoundedPicture::static_type();
+
         self.app.connect_activate(move |app| {
             if let Some(settings) = Settings::default() {
                 settings.set_property("gtk-application-prefer-dark-theme", true);

@@ -1,11 +1,14 @@
-use gtk4::{Builder, Image, Label, ListBoxRow};
+use std::path::PathBuf;
+use gtk4::{Builder, Image, Label, ListBoxRow, Overlay, Picture};
+use gtk4::cairo::Path;
 use gtk4::gdk::Texture;
 use gtk4::gio::File;
+use crate::ui::gtk4::widgets::rounded_picture::RoundedPicture;
 
 pub struct LogImageListItem {
     pub root: ListBoxRow,
-    pub log_container: gtk4::Box,
-    pub image: Image,
+    pub log_image_container: Overlay,
+    pub image: RoundedPicture,
     pub time: Label
 }
 
@@ -18,18 +21,22 @@ impl LogImageListItem {
             .object("root")
             .expect("Couldn't find 'root' in log_list_item.ui");
 
-        let log_container: gtk4::Box = builder
-            .object("log_container")
-            .expect("Couldn't find 'log_container' in log_list_item.ui");
+        let log_image_container: Overlay = builder
+            .object("log_image_container")
+            .expect("Couldn't find 'log_image_container' in log_list_item.ui");
 
-        let image: Image = builder
+        let image: RoundedPicture = builder
             .object("image")
             .expect("Couldn't find 'image' in log_list_item.ui");
+        image.set_from_file(Some(&file));
+        //image.set_can_shrink(true);
 
+        /*
         match Texture::from_file(&File::for_path(file)) {
             Ok(tex) => image.set_paintable(Some(&tex)),
             Err(err) => eprintln!("Failed to load JPEG: {err}"),
         }
+        */
 
         let time: Label = builder
             .object("time")
@@ -38,7 +45,7 @@ impl LogImageListItem {
 
         Self {
             root,
-            log_container,
+            log_image_container,
             image,
             time
         }

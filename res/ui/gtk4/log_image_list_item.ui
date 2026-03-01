@@ -6,39 +6,33 @@
         <property name="visible">True</property>
 
         <child>
-            <object class="GtkBox" id="log_container">
-                <property name="name">log_container</property>
-                <property name="visible">True</property>
-                <property name="orientation">horizontal</property>
+            <object class="GtkOverlay" id="log_image_container">
+                <property name="name">log_image_container</property>
                 <property name="width-request">400</property>
                 <property name="height-request">400</property>
-                <property name="spacing">4</property>
+                <property name="halign">start</property>
+                <property name="hexpand">False</property>
+                <property name="vexpand">False</property>
+                <property name="visible">True</property>
 
                 <child>
-                    <object class="GtkOverlay" id="overlay">
+                    <object class="RoundedPicture" id="image">
+                        <property name="name">image</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="halign">fill</property>
+                        <property name="valign">fill</property>
+                        <property name="radius">20</property>
                         <property name="visible">True</property>
+                    </object>
+                </child>
 
-                        <child>
-                            <object class="GtkImage" id="image">
-                                <property name="name">image</property>
-                                <property name="visible">True</property>
-                                <property name="hexpand">True</property>
-                                <property name="vexpand">True</property>
-                                <property name="halign">fill</property>
-                                <property name="valign">fill</property>
-                                <property name="visible">True</property>
-                            </object>
-                        </child>
-
-                        <child type="overlay">
-                            <object class="GtkLabel" id="time">
-                                <property name="name">time</property>
-                                <property name="visible">True</property>
-                                <property name="halign">end</property>
-                                <property name="valign">end</property>
-                            </object>
-                        </child>
-
+                <child type="overlay">
+                    <object class="GtkLabel" id="time">
+                        <property name="name">time</property>
+                        <property name="visible">True</property>
+                        <property name="halign">end</property>
+                        <property name="valign">end</property>
                     </object>
                 </child>
             </object>

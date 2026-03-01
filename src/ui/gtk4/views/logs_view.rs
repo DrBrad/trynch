@@ -51,6 +51,8 @@ impl LogsView {
         let logs_layout: ScrolledWindow = builder
             .object("logs_layout")
             .expect("Couldn't find 'logs_layout' in logs_view.ui");
+        //let adj = logs_view.ui.vadjustment();
+        //adj.set_value(adj.upper() - adj.page_size());
 
 
 
@@ -97,8 +99,10 @@ impl LogsView {
                 Continue
             }
         }, false)));
-        //let adj = logs_view.ui.vadjustment();
-        //adj.set_value(adj.upper() - adj.page_size());
+
+
+        let log = LogImageListItem::new("motion_20260301_163902.981.png");
+        logs_list.append(&log.root);
 
         Self {
             root,

@@ -13,6 +13,10 @@
     border-radius: 20px;
 }
 
+#logs_list #log_image_container {
+    border-radius: 20px;
+}
+
 #logs_list #log_container {
     background-color: @background_shimmer;
 }
