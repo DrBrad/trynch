@@ -3,11 +3,12 @@ mod bus;
 mod utils;
 
 use std::thread;
-use rdev::{listen, EventType};
-use rusb::{Context, DeviceDescriptor, UsbContext};
+use rdev::{listen};
+use rusb::{Context, Hotplug, HotplugBuilder, UsbContext};
 use crate::bus::event_bus::send_event;
 use crate::bus::events::key_event::KeyEvent;
 use crate::ui::gtk4::app::App;
+use crate::utils::usb::{HotplugHandler};
 
 fn main() {
     thread::spawn(|| {
@@ -20,26 +21,15 @@ fn main() {
         }
     });
 
-    /*
-    let context = Context::new().unwrap();
-    let devices = context.devices().unwrap();
+    thread::spawn(|| {
+        let context = Context::new().unwrap();
 
-    for device in devices.iter() {
-        let desc = device.device_descriptor().unwrap();
-        let class = desc.class_code();
-        let sub = desc.sub_class_code();
-        let proto = desc.protocol_code();
+        HotplugBuilder::new().enumerate(true).register::<Context, _>(&context, Box::new(HotplugHandler)).unwrap();
 
-
-        //println!("{} {class} {sub} {proto}", determine_device(desc));
-        println!("Bus {:03} Device {:03} ID {:04x}:{:04x}",
-                 device.bus_number(),
-                 device.address(),
-                 desc.vendor_id(),
-                 desc.product_id());
-    }
-    */
-
+        loop {
+            context.handle_events(None).unwrap();
+        }
+    });
 
 
     let app = App::new();
@@ -50,18 +40,4 @@ fn main() {
     //thread::park();
 }
 
-fn determine_device(desc: DeviceDescriptor) -> String {
-    let class = desc.class_code();
-    let sub = desc.sub_class_code();
-    let proto = desc.protocol_code();
 
-    // HID class (0x03), Boot subclass (0x01), Protocol 0x01=Keyboard, 0x02=Mouse
-    if class == 0x03 && sub == 0x01 && proto == 0x01 {
-        return String::from("Keyboard");
-    }
-    if class == 0x03 && sub == 0x01 && proto == 0x02 {
-        return String::from("Mouse");
-    }
-
-    String::from("Unknown")
-}

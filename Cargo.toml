@@ -25,4 +25,4 @@ rustflags = ["--cfg", "profile=\"nightly\""]
 [dependencies]
 gtk4 = "0.9.7"
 rdev = "0.5.3"
-rusb = "0.9"
+rusb = "0.9.4"
