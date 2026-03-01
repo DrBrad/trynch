@@ -1,18 +1,22 @@
 use std::cell::RefCell;
-use gtk4::{gdk, style_context_add_provider_for_display, Builder, CssProvider, Label, ListBox, ScrolledWindow};
+use gtk4::{gdk, style_context_add_provider_for_display, Builder, CssProvider, Label, ListBox, ScrolledWindow, Widget};
+use gtk4::prelude::Cast;
+use crate::bus::event_bus::{pause_event, register_event, unregister_event};
 use crate::bus::event_bus::EventPropagation::Continue;
-use crate::bus::event_bus::register_event;
 use crate::bus::events::key_event::KeyEvent;
+use crate::ui::gtk4::views::inter::stackable::Stackable;
 use crate::ui::gtk4::views::log_list_item::LogListItem;
+use crate::ui::gtk4::windows::main_window::MainWindow;
 
 pub struct LogsView {
     pub root: gtk4::Box,
-    pub logs_list: ListBox
+    pub logs_list: ListBox,
+    key_event_listener: Option<RefCell<u32>>
 }
 
 impl LogsView {
 
-    pub fn new() -> Self {
+    pub fn new(window: &MainWindow) -> Self {
         let builder = Builder::from_resource("/trynch/rust/res/ui/logs_view.ui");
 
         let provider = CssProvider::new();
@@ -48,6 +52,19 @@ impl LogsView {
 
 
 
+        let key_event_listener = Some(RefCell::new(register_event("key_event", {
+            let logs_list = logs_list.clone();
+
+            move |id, event| {
+                let event = event.as_any().downcast_ref::<KeyEvent>().unwrap();
+
+                let log = LogListItem::new(event.key.as_str());
+                logs_list.append(&log.root);
+
+                Continue
+            }
+        }, false)));
+
 
 
         //let adj = logs_view.ui.vadjustment();
@@ -55,7 +72,39 @@ impl LogsView {
 
         Self {
             root,
-            logs_list
+            logs_list,
+            key_event_listener
+        }
+    }
+}
+
+impl Stackable for LogsView {
+
+    fn get_name(&self) -> String {
+        String::from("main_view")
+    }
+
+    fn get_root(&self) -> &Widget {
+        self.root.upcast_ref()
+    }
+
+    fn on_create(&self) {
+        //(self.show_title_bar)(true);
+    }
+
+    fn on_resume(&self) {
+        //(self.show_title_bar)(true);
+    }
+
+    fn on_pause(&self) {
+        if let Some(key_event_listener) = &self.key_event_listener {
+            pause_event("key_event", *key_event_listener.borrow());
+        }
+    }
+
+    fn on_destroy(&self) {
+        if let Some(key_event_listener) = &self.key_event_listener {
+            unregister_event("key_event", *key_event_listener.borrow());
         }
     }
 }

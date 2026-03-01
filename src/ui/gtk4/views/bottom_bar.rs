@@ -1,0 +1,30 @@
+use gtk4::{Builder, Label};
+
+#[derive(Clone)]
+pub struct BottomBar {
+    pub root: gtk4::Box,
+    pub license: Label
+}
+
+impl BottomBar {
+
+    pub fn new() -> Self {
+        let builder = Builder::from_resource("/trynch/rust/res/ui/bottom_bar.ui");
+
+
+        let root: gtk4::Box = builder
+            .object("root")
+            .expect("Couldn't find 'root' in bottom_bar.ui");
+
+        let license: Label = builder
+            .object("license")
+            .expect("Couldn't find 'license' in bottom_bar.ui");
+
+        license.set_label(format!("{}-{}-{}", env!("PROFILE"), env!("CARGO_PKG_VERSION"), "gtk3").as_str());
+
+        Self {
+            root,
+            license
+        }
+    }
+}

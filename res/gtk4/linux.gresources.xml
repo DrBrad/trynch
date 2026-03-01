@@ -6,17 +6,19 @@
         <file alias="res/ui/window.ui" preprocess="xml-stripblanks">res/ui/gtk4/window.ui</file>
         <file alias="res/ui/window.css">res/ui/gtk4/window.css</file>
         <file alias="res/ui/theme.css">res/ui/gtk4/theme.css</file>
+        <file alias="res/ui/bottom_bar.ui" preprocess="xml-stripblanks">res/ui/gtk4/bottom_bar.ui</file>
 
         <file alias="res/ui/navigation_list_item.ui" preprocess="xml-stripblanks">res/ui/gtk4/navigation_list_item.ui</file>
 
 
-        <file alias="res/icons/inbox.svg">res/icons/inbox.svg</file>
-        <file alias="res/icons/archive.svg">res/icons/archive.svg</file>
-        <file alias="res/icons/settings.svg">res/icons/settings.svg</file>
+        <file alias="res/icons/ic_inbox.svg">res/icons/ic_inbox.svg</file>
+        <file alias="res/icons/ic_archive.svg">res/icons/ic_archive.svg</file>
+        <file alias="res/icons/ic_settings.svg">res/icons/ic_settings.svg</file>
 
+        <file alias="res/icons/ic_status_good.svg">res/icons/ic_status_good.svg</file>
+        <file alias="res/icons/ic_status_warning.svg">res/icons/ic_status_warning.svg</file>
+        <file alias="res/icons/ic_status_severe.svg">res/icons/ic_status_severe.svg</file>
 
-        <file alias="res/ui/main_view.ui" preprocess="xml-stripblanks">res/ui/gtk4/main_view.ui</file>
-        <file alias="res/ui/main_view.css">res/ui/gtk4/main_view.css</file>
 
         <file alias="res/ui/logs_view.ui" preprocess="xml-stripblanks">res/ui/gtk4/logs_view.ui</file>
         <file alias="res/ui/logs_view.css">res/ui/gtk4/logs_view.css</file>

@@ -17,6 +17,59 @@
 }
 
 
+
+#bottom_bar {
+    padding: 4px 10px;
+    font-size: 12px;
+    color: @text_secondary;
+    background-color: @background;
+    border-top: solid 1px @background_secondary;
+}
+
+#bottom_bar #license {
+    padding: 0 6px;
+    border-radius: 28px;
+    font-size: 10px;
+    color: @red;
+    border: solid 1px @red;
+}
+
+window.nightly #bottom_bar #license {
+    color: @purple;
+    border: solid 1px @purple;
+}
+
+window.release #bottom_bar #license {
+    color: @green;
+    border: solid 1px @green;
+}
+
+#bottom_bar button {
+    min-height: 0;
+    padding: 0;
+    border-radius: 6px;
+    border: none;
+    background-color: transparent;
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#bottom_bar button:hover {
+    background-color: @ripple;
+}
+
+#bottom_bar #warning {
+    background-image: url('../icons/ic_status_good.svg');
+}
+
+#bottom_bar #warning.warning {
+    background-image: url('../icons/ic_status_warning.svg');
+}
+
+#bottom_bar #warning.severe {
+    background-image: url('../icons/ic_status_severe.svg');
+}
 /*
 window {
     border: none;

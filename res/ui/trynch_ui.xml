@@ -132,14 +132,8 @@
             <attribute name="label" translatable="true">_Help</attribute>
             <section>
                 <item>
-                    <attribute name="action">win.website</attribute>
-                    <attribute name="label" translatable="yes">Website</attribute>
-                </item>
-            </section>
-            <section>
-                <item>
                     <attribute name="action">win.show-about-dialog</attribute>
-                    <attribute name="label" translatable="yes">About Ethernaught</attribute>
+                    <attribute name="label" translatable="yes">About Trynch</attribute>
                 </item>
             </section>
         </submenu>

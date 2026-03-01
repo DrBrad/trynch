@@ -3,15 +3,17 @@ use std::collections::HashMap;
 use std::process::exit;
 use std::rc::Rc;
 use gtk4::{gdk, style_context_add_provider_for_display, Application, ApplicationWindow, Builder, CssProvider, ListBox, Stack, StackPage};
-use gtk4::prelude::{ApplicationWindowExt, Cast, GtkWindowExt, ListModelExt, NativeExt, StyleContextExt, WidgetExt};
+use gtk4::prelude::{ApplicationWindowExt, BoxExt, Cast, GtkWindowExt, ListModelExt, NativeExt, StyleContextExt, WidgetExt};
+use crate::ui::gtk4::views::bottom_bar::BottomBar;
 use crate::ui::gtk4::views::inter::stackable::Stackable;
-use crate::ui::gtk4::views::main_view::MainView;
+use crate::ui::gtk4::views::logs_view::LogsView;
 use crate::ui::gtk4::views::navigation_list_item::NavigationListItem;
 
 #[derive(Clone)]
 pub struct MainWindow {
     pub window: ApplicationWindow,
     pub stack: Stack,
+    pub bottom_bar: BottomBar,
     pub views: Rc<RefCell<HashMap<String, Box<dyn Stackable>>>>
 }
 
@@ -39,6 +41,14 @@ impl MainWindow {
 
         //window_content.add(&create_alertbar());
 
+        let root: gtk4::Box = builder
+            .object("root")
+            .expect("Failed to get the 'root' from window.ui");
+
+        let bottom_bar = BottomBar::new();
+        root.append(&bottom_bar.root);
+
+
 
         let navigation_list: ListBox = builder
             .object("navigation_list")
@@ -46,9 +56,9 @@ impl MainWindow {
         navigation_list.set_selection_mode(gtk4::SelectionMode::Single);
 
 
-        navigation_list.append(&NavigationListItem::new("/trynch/rust/res/icons/inbox.svg", "Inbox").root);
-        navigation_list.append(&NavigationListItem::new("/trynch/rust/res/icons/archive.svg", "Archive").root);
-        navigation_list.append(&NavigationListItem::new("/trynch/rust/res/icons/settings.svg", "Settings").root);
+        navigation_list.append(&NavigationListItem::new("/trynch/rust/res/icons/ic_inbox.svg", "Inbox").root);
+        navigation_list.append(&NavigationListItem::new("/trynch/rust/res/icons/ic_archive.svg", "Archive").root);
+        navigation_list.append(&NavigationListItem::new("/trynch/rust/res/icons/ic_settings.svg", "Settings").root);
 
 
 
@@ -88,10 +98,11 @@ impl MainWindow {
         let _self = Self {
             window,
             stack,
+            bottom_bar,
             views
         };
 
-        _self.add_view(Box::new(MainView::new(&_self)));
+        _self.add_view(Box::new(LogsView::new(&_self)));
 
         _self.window.show();
 

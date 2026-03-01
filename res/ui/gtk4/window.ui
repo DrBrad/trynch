@@ -10,26 +10,35 @@
         <property name="can-focus">False</property>
 
         <child>
-            <object class="GtkBox">
+            <object class="GtkBox" id="root">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
-                <property name="orientation">horizontal</property>
+                <property name="orientation">vertical</property>
 
                 <child>
-                    <object class="GtkListBox" id="navigation_list">
-                        <property name="name">navigation_list</property>
-                        <property name="visible">True</property>
-                        <property name="vexpand">True</property>
-                        <property name="width-request">300</property>
-                    </object>
-                </child>
-
-                <child>
-                    <object class="GtkStack" id="stack">
+                    <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
+                        <property name="orientation">horizontal</property>
+
+                        <child>
+                            <object class="GtkListBox" id="navigation_list">
+                                <property name="name">navigation_list</property>
+                                <property name="visible">True</property>
+                                <property name="vexpand">True</property>
+                                <property name="width-request">300</property>
+                            </object>
+                        </child>
+
+                        <child>
+                            <object class="GtkStack" id="stack">
+                                <property name="visible">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
+                            </object>
+                        </child>
                     </object>
                 </child>
             </object>
