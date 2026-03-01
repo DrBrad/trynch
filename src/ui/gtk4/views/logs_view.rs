@@ -3,15 +3,20 @@ use gtk4::{gdk, style_context_add_provider_for_display, Builder, CssProvider, La
 use gtk4::prelude::Cast;
 use crate::bus::event_bus::{pause_event, register_event, unregister_event};
 use crate::bus::event_bus::EventPropagation::Continue;
+use crate::bus::events::camera_event::CameraEvent;
 use crate::bus::events::key_event::KeyEvent;
+use crate::bus::events::usb_event::UsbEvent;
 use crate::ui::gtk4::views::inter::stackable::Stackable;
+use crate::ui::gtk4::views::log_image_list_item::LogImageListItem;
 use crate::ui::gtk4::views::log_list_item::LogListItem;
 use crate::ui::gtk4::windows::main_window::MainWindow;
 
 pub struct LogsView {
     pub root: gtk4::Box,
     pub logs_list: ListBox,
-    key_event_listener: Option<RefCell<u32>>
+    key_event_listener: Option<RefCell<u32>>,
+    usb_event_listener: Option<RefCell<u32>>,
+    camera_event_listener: Option<RefCell<u32>>
 }
 
 impl LogsView {
@@ -66,14 +71,41 @@ impl LogsView {
         }, false)));
 
 
+        let usb_event_listener = Some(RefCell::new(register_event("usb_event", {
+            let logs_list = logs_list.clone();
 
+            move |id, event| {
+                let event = event.as_any().downcast_ref::<UsbEvent>().unwrap();
+
+                let log = LogListItem::new(event.name.as_str());
+                logs_list.append(&log.root);
+
+                Continue
+            }
+        }, false)));
+
+
+        let camera_event_listener = Some(RefCell::new(register_event("camera_event", {
+            let logs_list = logs_list.clone();
+
+            move |id, event| {
+                let event = event.as_any().downcast_ref::<CameraEvent>().unwrap();
+
+                let log = LogImageListItem::new(event.file.as_str());
+                logs_list.append(&log.root);
+
+                Continue
+            }
+        }, false)));
         //let adj = logs_view.ui.vadjustment();
         //adj.set_value(adj.upper() - adj.page_size());
 
         Self {
             root,
             logs_list,
-            key_event_listener
+            key_event_listener,
+            usb_event_listener,
+            camera_event_listener
         }
     }
 }
@@ -100,11 +132,27 @@ impl Stackable for LogsView {
         if let Some(key_event_listener) = &self.key_event_listener {
             pause_event("key_event", *key_event_listener.borrow());
         }
+
+        if let Some(usb_event_listener) = &self.usb_event_listener {
+            pause_event("usb_event", *usb_event_listener.borrow());
+        }
+
+        if let Some(camera_event_listener) = &self.camera_event_listener {
+            pause_event("camera_event", *camera_event_listener.borrow());
+        }
     }
 
     fn on_destroy(&self) {
         if let Some(key_event_listener) = &self.key_event_listener {
             unregister_event("key_event", *key_event_listener.borrow());
+        }
+
+        if let Some(usb_event_listener) = &self.usb_event_listener {
+            unregister_event("usb_event", *usb_event_listener.borrow());
+        }
+
+        if let Some(camera_event_listener) = &self.camera_event_listener {
+            unregister_event("camera_event", *camera_event_listener.borrow());
         }
     }
 }

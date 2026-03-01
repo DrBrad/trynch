@@ -1,16 +1,18 @@
-use gtk4::{Builder, Label, ListBoxRow};
+use gtk4::{Builder, Image, Label, ListBoxRow};
+use gtk4::gdk::Texture;
+use gtk4::gio::File;
 
-pub struct LogListItem {
+pub struct LogImageListItem {
     pub root: ListBoxRow,
     pub log_container: gtk4::Box,
-    pub log: Label,
+    pub image: Image,
     pub time: Label
 }
 
-impl LogListItem {
+impl LogImageListItem {
 
-    pub fn new(message: &str) -> Self {
-        let builder = Builder::from_resource("/trynch/rust/res/ui/log_list_item.ui");
+    pub fn new(file: &str) -> Self {
+        let builder = Builder::from_resource("/trynch/rust/res/ui/log_image_list_item.ui");
 
         let root: ListBoxRow = builder
             .object("root")
@@ -20,10 +22,14 @@ impl LogListItem {
             .object("log_container")
             .expect("Couldn't find 'log_container' in log_list_item.ui");
 
-        let log: Label = builder
-            .object("log")
-            .expect("Couldn't find 'log' in log_list_item.ui");
-        log.set_label(message);
+        let image: Image = builder
+            .object("image")
+            .expect("Couldn't find 'image' in log_list_item.ui");
+
+        match Texture::from_file(&File::for_path(file)) {
+            Ok(tex) => image.set_paintable(Some(&tex)),
+            Err(err) => eprintln!("Failed to load JPEG: {err}"),
+        }
 
         let time: Label = builder
             .object("time")
@@ -33,7 +39,7 @@ impl LogListItem {
         Self {
             root,
             log_container,
-            log,
+            image,
             time
         }
     }

@@ -26,3 +26,7 @@ rustflags = ["--cfg", "profile=\"nightly\""]
 gtk4 = "0.9.7"
 rdev = "0.5.3"
 rusb = "0.9.4"
+
+nokhwa = { version = "0.10", default-features = false, features = ["input-native"] }
+image = "0.25"
+chrono = "0.4"

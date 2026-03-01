@@ -1,28 +1,26 @@
 use std::any::Any;
-use std::collections::HashMap;
-use rdev::Key;
 use crate::bus::events::inter::event::Event;
 
 #[derive(Debug, Clone)]
-pub struct TimerEvent {
+pub struct CameraEvent {
     prevent_default: bool,
-    pub(crate) time: u128
+    pub(crate) file: String
 }
 
-impl TimerEvent {
+impl CameraEvent {
 
-    pub fn new(time: u128) -> Self {
+    pub fn new(file: String) -> Self {
         Self {
             prevent_default: false,
-            time
+            file
         }
     }
 }
 
-impl Event for TimerEvent {
+impl Event for CameraEvent {
 
     fn get_name(&self) -> String {
-        String::from("timer_event")
+        String::from("camera_event")
     }
 
     fn is_prevent_default(&self) -> bool {

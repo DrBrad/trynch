@@ -1,22 +1,35 @@
+use std::thread;
 use std::time::Duration;
-use rusb::{Device, UsbContext};
+use rusb::{Context, Device, HotplugBuilder, UsbContext};
 use crate::bus::event_bus::send_event;
-use crate::bus::events::key_event::KeyEvent;
+use crate::bus::events::usb_event::UsbEvent;
 
 pub struct HotplugHandler;
 
 impl<T: UsbContext> rusb::Hotplug<T> for HotplugHandler {
 
     fn device_arrived(&mut self, device: Device<T>) {
-        send_event(Box::new(KeyEvent::new(format!("[+] {}", device_pretty_name(&device)))));
+        send_event(Box::new(UsbEvent::new(format!("[+] {}", device_pretty_name(&device)))));
     }
 
     fn device_left(&mut self, device: Device<T>) {
-        send_event(Box::new(KeyEvent::new(format!("[-] {}", device_pretty_name(&device)))));
+        send_event(Box::new(UsbEvent::new(format!("[-] {}", device_pretty_name(&device)))));
     }
 }
 
-pub fn device_pretty_name<T: UsbContext>(device: &Device<T>) -> String {
+pub fn run() {
+    thread::spawn(|| {
+        let context = Context::new().unwrap();
+
+        HotplugBuilder::new().enumerate(true).register::<Context, _>(&context, Box::new(HotplugHandler)).unwrap();
+
+        loop {
+            context.handle_events(None).unwrap();
+        }
+    });
+}
+
+fn device_pretty_name<T: UsbContext>(device: &Device<T>) -> String {
     match device.device_descriptor() {
         Ok(desc) => {
             //let class = desc.class_code();
