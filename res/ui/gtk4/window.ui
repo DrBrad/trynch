@@ -14,7 +14,16 @@
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
-                <property name="orientation">vertical</property>
+                <property name="orientation">horizontal</property>
+
+                <child>
+                    <object class="GtkListBox" id="navigation_list">
+                        <property name="name">navigation_list</property>
+                        <property name="visible">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="width-request">300</property>
+                    </object>
+                </child>
 
                 <child>
                     <object class="GtkStack" id="stack">

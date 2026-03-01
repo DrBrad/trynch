@@ -9,7 +9,7 @@ pub struct LogListItem {
 
 impl LogListItem {
 
-    pub fn new(message: &str) -> Self {
+    pub fn new(log: &str) -> Self {
         let builder = Builder::from_resource("/trynch/rust/res/ui/log_list_item.ui");
 
         let root: ListBoxRow = builder
@@ -20,10 +20,10 @@ impl LogListItem {
             .object("log_container")
             .expect("Couldn't find 'log_container' in log_list_item.ui");
 
-        let log: Label = builder
+        let log_view: Label = builder
             .object("log")
             .expect("Couldn't find 'log' in log_list_item.ui");
-        log.set_label(message);
+        log_view.set_label(log);
 
         let time: Label = builder
             .object("time")
@@ -33,7 +33,7 @@ impl LogListItem {
         Self {
             root,
             log_container,
-            log,
+            log: log_view,
             time
         }
     }

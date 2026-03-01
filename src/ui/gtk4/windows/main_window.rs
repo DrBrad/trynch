@@ -2,10 +2,11 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::process::exit;
 use std::rc::Rc;
-use gtk4::{gdk, style_context_add_provider_for_display, Application, ApplicationWindow, Builder, CssProvider, Stack, StackPage};
+use gtk4::{gdk, style_context_add_provider_for_display, Application, ApplicationWindow, Builder, CssProvider, ListBox, Stack, StackPage};
 use gtk4::prelude::{ApplicationWindowExt, Cast, GtkWindowExt, ListModelExt, NativeExt, StyleContextExt, WidgetExt};
 use crate::ui::gtk4::views::inter::stackable::Stackable;
 use crate::ui::gtk4::views::main_view::MainView;
+use crate::ui::gtk4::views::navigation_list_item::NavigationListItem;
 
 #[derive(Clone)]
 pub struct MainWindow {
@@ -30,13 +31,32 @@ impl MainWindow {
 
         window.set_application(Some(app));
         window.connect_destroy(|_| exit(0));
-        
+
         window.set_show_menubar(true);
 
 
         //window.set_border_width(1);
 
         //window_content.add(&create_alertbar());
+
+
+        let navigation_list: ListBox = builder
+            .object("navigation_list")
+            .expect("Couldn't find 'navigation_list' in window.ui");
+        navigation_list.set_selection_mode(gtk4::SelectionMode::Single);
+
+
+        navigation_list.append(&NavigationListItem::new("/trynch/rust/res/icons/inbox.svg", "Inbox").root);
+        navigation_list.append(&NavigationListItem::new("/trynch/rust/res/icons/archive.svg", "Archive").root);
+        navigation_list.append(&NavigationListItem::new("/trynch/rust/res/icons/settings.svg", "Settings").root);
+
+
+
+
+
+
+
+
 
         let stack: Stack = builder
             .object("stack")
