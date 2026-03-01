@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::process::exit;
 use std::rc::Rc;
 use gtk4::{gdk, style_context_add_provider_for_display, Application, ApplicationWindow, Builder, CssProvider, Stack, StackPage};
-use gtk4::prelude::{Cast, GtkWindowExt, ListModelExt, NativeExt, StyleContextExt, WidgetExt};
+use gtk4::prelude::{ApplicationWindowExt, Cast, GtkWindowExt, ListModelExt, NativeExt, StyleContextExt, WidgetExt};
 use crate::ui::gtk4::views::inter::stackable::Stackable;
 use crate::ui::gtk4::views::main_view::MainView;
 
@@ -30,6 +30,8 @@ impl MainWindow {
 
         window.set_application(Some(app));
         window.connect_destroy(|_| exit(0));
+        
+        window.set_show_menubar(true);
 
 
         //window.set_border_width(1);

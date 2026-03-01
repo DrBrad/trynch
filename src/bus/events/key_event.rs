@@ -1,28 +1,26 @@
 use std::any::Any;
-use std::collections::HashMap;
-use rdev::Key;
 use crate::bus::events::inter::event::Event;
 
 #[derive(Debug, Clone)]
-pub struct ButtonEvent {
+pub struct KeyEvent {
     prevent_default: bool,
-    pub(crate) button: Key
+    pub(crate) key: String
 }
 
-impl ButtonEvent {
+impl KeyEvent {
 
-    pub fn new(button: Key) -> Self {
+    pub fn new(key: String) -> Self {
         Self {
             prevent_default: false,
-            button
+            key
         }
     }
 }
 
-impl Event for ButtonEvent {
+impl Event for KeyEvent {
 
     fn get_name(&self) -> String {
-        String::from("button_event")
+        String::from("key_event")
     }
 
     fn is_prevent_default(&self) -> bool {

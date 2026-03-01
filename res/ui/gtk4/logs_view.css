@@ -1,0 +1,28 @@
+
+#logs_list {
+    padding: 10px;
+}
+
+#logs_list row {
+    all: unset;
+    margin: 1px 0;
+}
+
+#logs_list #log_container {
+    padding: 10px;
+    border-radius: 20px;
+}
+
+#logs_list #log_container {
+    background-color: @background_shimmer;
+}
+
+#logs_list #log {
+    font-size: 14px;
+    color: @text_primary;
+}
+
+#logs_list #time {
+    font-size: 10px;
+    color: @text_secondary;
+}

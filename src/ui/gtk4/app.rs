@@ -42,11 +42,11 @@ impl App {
             */
 
             let builder = Builder::from_resource("/trynch/rust/res/ui/trynch_ui.xml");
-            let model: gio::Menu = builder
+            let menubar: gio::Menu = builder
                 .object("window_menu")
                 .expect("Couldn't find 'window_menu' in trynch_ui.xml");
 
-            app.set_menubar(Some(&model));
+            app.set_menubar(Some(&menubar));
 
             MainWindow::new(&app);
 

@@ -1,36 +1,24 @@
 mod ui;
+mod bus;
+mod utils;
 
+use std::thread;
+use rdev::{listen, EventType};
 use rusb::{Context, DeviceDescriptor, UsbContext};
+use crate::bus::event_bus::send_event;
+use crate::bus::events::key_event::KeyEvent;
 use crate::ui::gtk4::app::App;
 
 fn main() {
-    let app = App::new();
-    app.run();
-
-
-
-    /*
     thread::spawn(|| {
         if let Err(err) = listen(|event| {
-            match event.event_type {
-                EventType::KeyRelease(key) => {
-                    /*
-                    if key == Key::BackSlash {
-                        exit(0);
-                    }
-                    */
-                    println!("{:?}", key);
-                    //send_event(Box::new(ButtonEvent::new(key)))
-                }
-                _ => {}
+            if let Some(name) = event.name {
+                send_event(Box::new(KeyEvent::new(name)));
             }
         }) {
             eprintln!("Error: {:?}", err);
         }
     });
-
-    thread::park();
-    */
 
     /*
     let context = Context::new().unwrap();
@@ -43,16 +31,23 @@ fn main() {
         let proto = desc.protocol_code();
 
 
-        println!("{} {class} {sub} {proto}", determine_device(desc));
-        /.*
+        //println!("{} {class} {sub} {proto}", determine_device(desc));
         println!("Bus {:03} Device {:03} ID {:04x}:{:04x}",
                  device.bus_number(),
                  device.address(),
                  desc.vendor_id(),
                  desc.product_id());
-                 *./
     }
     */
+
+
+
+    let app = App::new();
+    app.run();
+
+
+
+    //thread::park();
 }
 
 fn determine_device(desc: DeviceDescriptor) -> String {

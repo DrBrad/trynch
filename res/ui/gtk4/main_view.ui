@@ -10,11 +10,10 @@
         <property name="orientation">horizontal</property>
 
         <child>
-            <object class="GtkBox" id="activity_pane">
+            <object class="GtkPaned" id="activity_pane">
                 <property name="name">activity_pane</property>
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
-
             </object>
         </child>
     </object>
