@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use gtk4::{gdk, style_context_add_provider_for_display, Builder, CssProvider, Label, ListBox, ScrolledWindow, Widget};
 use gtk4::gio::SimpleAction;
-use gtk4::prelude::{ActionMapExt, Cast};
+use gtk4::prelude::{ActionMapExt, Cast, WidgetExt};
 use crate::bus::event_bus::{pause_event, register_event, resume_event, unregister_event};
 use crate::bus::event_bus::EventPropagation::Continue;
 use crate::bus::events::log_event::LogEvent;
@@ -65,12 +65,17 @@ impl LogsView {
 
         let action = SimpleAction::new("start", None);
         action.connect_activate({
+            let logs_list = logs_list.clone();
             let show_capture_bar = window.show_capture_bar.clone();
             let log_event_listener = log_event_listener.clone();
 
             move |_, _| {
                 show_capture_bar.borrow()(true);
                 if let Some(log_event_listener) = &log_event_listener {
+                    while let Some(child) = logs_list.first_child() {
+                        logs_list.remove(&child);
+                    }
+
                     resume_event("log_event", *log_event_listener.borrow());
                 }
             }
