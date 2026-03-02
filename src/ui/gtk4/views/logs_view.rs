@@ -1,7 +1,8 @@
 use std::cell::RefCell;
 use gtk4::{gdk, style_context_add_provider_for_display, Builder, CssProvider, Label, ListBox, ScrolledWindow, Widget};
-use gtk4::prelude::Cast;
-use crate::bus::event_bus::{pause_event, register_event, unregister_event};
+use gtk4::gio::SimpleAction;
+use gtk4::prelude::{ActionMapExt, Cast};
+use crate::bus::event_bus::{pause_event, register_event, resume_event, unregister_event};
 use crate::bus::event_bus::EventPropagation::Continue;
 use crate::bus::events::log_event::LogEvent;
 use crate::ui::gtk4::views::inter::stackable::Stackable;
@@ -33,25 +34,12 @@ impl LogsView {
             .object("logs_list")
             .expect("Couldn't find 'logs_list' in logs_view.ui");
 
-        /*
-        let mut logs: Vec<LogListItem> = Vec::new();
-
-        for i in 0..20 {
-            let log = LogListItem::new();
-            logs_list.append(&log.root);
-            logs.push(log);
-        }
-        */
-
-
 
         let logs_layout: ScrolledWindow = builder
             .object("logs_layout")
             .expect("Couldn't find 'logs_layout' in logs_view.ui");
         //let adj = logs_view.ui.vadjustment();
         //adj.set_value(adj.upper() - adj.page_size());
-
-
 
 
 
@@ -72,8 +60,36 @@ impl LogsView {
 
                 Continue
             }
-        }, false)));
+        }, true)));
 
+
+        let action = SimpleAction::new("start", None);
+        action.connect_activate({
+            let show_capture_bar = window.show_capture_bar.clone();
+            let log_event_listener = log_event_listener.clone();
+
+            move |_, _| {
+                show_capture_bar.borrow()(true);
+                if let Some(log_event_listener) = &log_event_listener {
+                    resume_event("log_event", *log_event_listener.borrow());
+                }
+            }
+        });
+        window.window.add_action(&action);
+
+        let action = SimpleAction::new("stop", None);
+        action.connect_activate({
+            let show_capture_bar = window.show_capture_bar.clone();
+            let log_event_listener = log_event_listener.clone();
+
+            move |_, _| {
+                show_capture_bar.borrow()(false);
+                if let Some(log_event_listener) = &log_event_listener {
+                    pause_event("log_event", *log_event_listener.borrow());
+                }
+            }
+        });
+        window.window.add_action(&action);
 
         //let log = LogImageListItem::new("motion_20260301_170134.985.png", Detections::Capture, Severities::Severe);
         //logs_list.append(&log.root);
@@ -89,7 +105,7 @@ impl LogsView {
 impl Stackable for LogsView {
 
     fn get_name(&self) -> String {
-        String::from("main_view")
+        String::from("logs_view")
     }
 
     fn get_root(&self) -> &Widget {

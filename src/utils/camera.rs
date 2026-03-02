@@ -21,7 +21,7 @@ pub fn run() {
 
         let mut prev_gray: Vec<u8> = Vec::new();
         let per_pixel_thresh: u8 = 18;
-        let motion_pixels_threshold: u32 = 1_000;
+        let motion_pixels_threshold: u32 = 10_000;
         let cooldown = Duration::from_secs(2);
         let mut last_save = Instant::now() - cooldown;
 

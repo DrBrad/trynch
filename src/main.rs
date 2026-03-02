@@ -3,7 +3,7 @@ mod bus;
 mod utils;
 
 use crate::ui::gtk4::app::App;
-use crate::utils::{camera, keyboard, usb};
+use crate::utils::{keyboard, usb, camera};
 
 fn main() {
     keyboard::run();

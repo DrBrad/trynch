@@ -11,13 +11,56 @@ menubar {
     background-color: @background;
 }
 
+button {
+    border: none;
+}
 
-
-#top_bar {
-    border-bottom: solid 1px @background_secondary;
+button:focus, button:checked {
+    outline: none;
+    border: none;
 }
 
 
+#top_bar {
+    padding: 0 8px;
+    border-bottom: solid 1px @background_secondary;
+}
+
+#app_options button {
+    min-width: 24px;
+    min-height: 24px;
+    padding: 4px;
+    border-radius: 6px;
+    background-color: transparent;
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#app_options button:hover {
+    background-color: @ripple;
+}
+
+#app_options {
+    padding: 4px 0;
+}
+
+#app_options #start {
+    background-image: url('../icons/ic_start.svg');
+}
+
+#app_options #stop {
+    background-image: url('../icons/ic_stop.svg');
+}
+
+#app_options #stop {
+    background-color: @red;
+}
+
+#app_options.running #start {
+    background-color: @green;
+    background-image: url('../icons/ic_restart.svg');
+}
 
 
 

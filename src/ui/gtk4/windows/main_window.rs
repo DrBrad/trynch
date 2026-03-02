@@ -4,6 +4,7 @@ use std::process::exit;
 use std::rc::Rc;
 use gtk4::{gdk, style_context_add_provider_for_display, Application, ApplicationWindow, Builder, CssProvider, ListBox, Stack, StackPage};
 use gtk4::prelude::{ApplicationWindowExt, BoxExt, Cast, GtkWindowExt, ListModelExt, NativeExt, StyleContextExt, WidgetExt};
+use crate::ui::gtk4::actions::window_actions::register_window_actions;
 use crate::ui::gtk4::views::bottom_bar::BottomBar;
 use crate::ui::gtk4::views::inter::stackable::Stackable;
 use crate::ui::gtk4::views::logs_view::LogsView;
@@ -14,8 +15,10 @@ use crate::ui::gtk4::views::top_bar::TopBar;
 pub struct MainWindow {
     pub window: ApplicationWindow,
     pub stack: Stack,
+    pub top_bar: TopBar,
     pub bottom_bar: BottomBar,
-    pub views: Rc<RefCell<HashMap<String, Box<dyn Stackable>>>>
+    pub views: Rc<RefCell<HashMap<String, Box<dyn Stackable>>>>,
+    pub show_capture_bar: Rc<RefCell<dyn Fn(bool)>>
 }
 
 impl MainWindow {
@@ -96,15 +99,20 @@ impl MainWindow {
             }
         });
 
+        let show_capture_bar = Rc::new(RefCell::new(show_capture_bar(&top_bar)));
+
         let _self = Self {
             window,
             stack,
+            top_bar,
             bottom_bar,
-            views
+            views,
+            show_capture_bar
         };
 
         _self.add_view(Box::new(LogsView::new(&_self)));
 
+        register_window_actions(&_self);
         _self.window.show();
 
         _self
@@ -162,5 +170,20 @@ impl MainWindow {
         self.stack.set_visible_child_name(&name);
         view.on_create();
         self.views.borrow_mut().insert(name, view);
+    }
+}
+
+fn show_capture_bar(top_bar: &TopBar) -> impl Fn(bool) + 'static {
+    let top_bar = top_bar.clone();
+
+    move |shown| {
+        if shown {
+            top_bar.app_options.style_context().add_class("running");
+            top_bar.stop.show();
+            return;
+        }
+
+        top_bar.app_options.style_context().remove_class("running");
+        top_bar.stop.hide();
     }
 }
