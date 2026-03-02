@@ -1,4 +1,5 @@
 use std::any::Any;
+use std::time::Duration;
 use crate::bus::events::inter::event::Event;
 use crate::utils::detections::Detections;
 use crate::utils::severities::Severities;
@@ -8,17 +9,19 @@ pub struct LogEvent {
     prevent_default: bool,
     pub(crate) log: String,
     pub(crate) detection: Detections,
-    pub(crate) severity: Severities
+    pub(crate) severity: Severities,
+    pub(crate) time: Duration
 }
 
 impl LogEvent {
 
-    pub fn new(log: String, detection: Detections, severity: Severities) -> Self {
+    pub fn new(log: String, detection: Detections, severity: Severities, time: Duration) -> Self {
         Self {
             prevent_default: false,
             log,
             detection,
-            severity
+            severity,
+            time
         }
     }
 }

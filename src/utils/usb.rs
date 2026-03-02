@@ -1,5 +1,5 @@
 use std::thread;
-use std::time::Duration;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use rusb::{Context, Device, HotplugBuilder, UsbContext};
 use crate::bus::event_bus::send_event;
 use crate::bus::events::log_event::LogEvent;
@@ -11,11 +11,13 @@ pub struct HotplugHandler;
 impl<T: UsbContext> rusb::Hotplug<T> for HotplugHandler {
 
     fn device_arrived(&mut self, device: Device<T>) {
-        send_event(Box::new(LogEvent::new(format!("[+] {}", device_pretty_name(&device)), Detections::Usb, Severities::Warning)));
+        let now = SystemTime::now().duration_since(UNIX_EPOCH).expect("Time went backwards");
+        send_event(Box::new(LogEvent::new(format!("[+] {}", device_pretty_name(&device)), Detections::Usb, Severities::Warning, now)));
     }
 
     fn device_left(&mut self, device: Device<T>) {
-        send_event(Box::new(LogEvent::new(format!("[-] {}", device_pretty_name(&device)), Detections::Usb, Severities::Warning)));
+        let now = SystemTime::now().duration_since(UNIX_EPOCH).expect("Time went backwards");
+        send_event(Box::new(LogEvent::new(format!("[-] {}", device_pretty_name(&device)), Detections::Usb, Severities::Warning, now)));
     }
 }
 

@@ -1,6 +1,5 @@
 use std::thread;
-use std::time::{Duration, Instant};
-use chrono::Local;
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use image::{ImageBuffer, Rgb};
 use nokhwa::Camera;
 use nokhwa::pixel_format::RgbFormat;
@@ -41,14 +40,14 @@ pub fn run() {
             let changed = motion_score(&prev_gray, &gray, per_pixel_thresh);
 
             if changed > motion_pixels_threshold && last_save.elapsed() >= cooldown {
-                let ts = Local::now().format("%Y%m%d_%H%M%S%.3f");
-                let filename = format!("motion_{}.png", ts);
+                let now = SystemTime::now().duration_since(UNIX_EPOCH).expect("Time went backwards");
+                let filename = format!("motion_{}.png", now.as_secs());
 
                 let img: ImageBuffer<Rgb<u8>, _> = ImageBuffer::from_raw(w, h, rgb.clone()).unwrap();
                 img.save(&filename).unwrap();
 
                 println!("Motion! changed_pixels={} saved={}", changed, filename);
-                send_event(Box::new(LogEvent::new(filename, Detections::Motion, Severities::Warning)));
+                send_event(Box::new(LogEvent::new(filename, Detections::Motion, Severities::Warning, now)));
 
                 last_save = Instant::now();
             }

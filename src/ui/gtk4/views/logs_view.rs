@@ -65,8 +65,8 @@ impl LogsView {
                 let event = event.as_any().downcast_ref::<LogEvent>().unwrap();
 
                 match event.detection {
-                    Detections::Keyboard | Detections::Usb => logs_list.append(&LogListItem::new(event.log.as_str(), event.detection, event.severity).root),
-                    Detections::Capture | Detections::Motion => logs_list.append(&LogImageListItem::new(event.log.as_str(), event.detection, event.severity).root),
+                    Detections::Keyboard | Detections::Usb => logs_list.append(&LogListItem::new(event.log.as_str(), event.detection, event.severity, event.time).root),
+                    Detections::Capture | Detections::Motion => logs_list.append(&LogImageListItem::new(event.log.as_str(), event.detection, event.severity, event.time).root),
                     Detections::Mic => {}
                 }
 

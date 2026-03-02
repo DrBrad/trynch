@@ -1,3 +1,4 @@
+use std::time::Duration;
 use gtk4::{Builder, Image, Label, ListBoxRow, Overlay};
 use gtk4::prelude::{StyleContextExt, WidgetExt};
 use crate::ui::gtk4::widgets::rounded_picture::RoundedPicture;
@@ -13,7 +14,7 @@ pub struct LogImageListItem {
 
 impl LogImageListItem {
 
-    pub fn new(file: &str, detection: Detections, severity: Severities) -> Self {
+    pub fn new(file: &str, detection: Detections, severity: Severities, time: Duration) -> Self {
         let builder = Builder::from_resource("/trynch/rust/res/ui/log_image_list_item.ui");
 
         let root: ListBoxRow = builder
