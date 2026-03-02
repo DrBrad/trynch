@@ -14,7 +14,7 @@ fn main() {
 
     keyboard::run();
     usb::run();
-    camera::run();
+    //camera::run();
 
 
     let app = App::new();
