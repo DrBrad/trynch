@@ -6,7 +6,9 @@ use nokhwa::Camera;
 use nokhwa::pixel_format::RgbFormat;
 use nokhwa::utils::{CameraIndex, RequestedFormat, RequestedFormatType};
 use crate::bus::event_bus::send_event;
-use crate::bus::events::camera_event::CameraEvent;
+use crate::bus::events::log_event::LogEvent;
+use crate::utils::detections::Detections;
+use crate::utils::severities::Severities;
 
 pub fn run() {
     thread::spawn(|| {
@@ -46,7 +48,7 @@ pub fn run() {
                 img.save(&filename).unwrap();
 
                 println!("Motion! changed_pixels={} saved={}", changed, filename);
-                send_event(Box::new(CameraEvent::new(filename)));
+                send_event(Box::new(LogEvent::new(filename, Detections::Motion, Severities::Warning)));
 
                 last_save = Instant::now();
             }

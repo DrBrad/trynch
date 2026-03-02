@@ -19,7 +19,6 @@ impl NavigationListItem {
         let icon_view: Image = builder
             .object("icon")
             .expect("Couldn't find 'icon' in navigation_list_item.ui");
-
         icon_view.set_resource(Some(icon));
 
         let title_view: Label = builder

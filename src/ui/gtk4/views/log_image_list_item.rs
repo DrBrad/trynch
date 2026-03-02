@@ -1,9 +1,8 @@
-use std::path::PathBuf;
-use gtk4::{Builder, Image, Label, ListBoxRow, Overlay, Picture};
-use gtk4::cairo::Path;
-use gtk4::gdk::Texture;
-use gtk4::gio::File;
+use gtk4::{Builder, Image, Label, ListBoxRow, Overlay};
+use gtk4::prelude::{StyleContextExt, WidgetExt};
 use crate::ui::gtk4::widgets::rounded_picture::RoundedPicture;
+use crate::utils::detections::Detections;
+use crate::utils::severities::Severities;
 
 pub struct LogImageListItem {
     pub root: ListBoxRow,
@@ -14,12 +13,23 @@ pub struct LogImageListItem {
 
 impl LogImageListItem {
 
-    pub fn new(file: &str) -> Self {
+    pub fn new(file: &str, detection: Detections, severity: Severities) -> Self {
         let builder = Builder::from_resource("/trynch/rust/res/ui/log_image_list_item.ui");
 
         let root: ListBoxRow = builder
             .object("root")
             .expect("Couldn't find 'root' in log_list_item.ui");
+        root.style_context().add_class(&severity.to_string());
+
+        let icon: Image = builder
+            .object("icon")
+            .expect("Couldn't find 'icon' in log_list_item.ui");
+
+        match detection {
+            Detections::Capture => icon.set_resource(Some("/trynch/rust/res/icons/ic_capture.svg")),
+            Detections::Motion => icon.set_resource(Some("/trynch/rust/res/icons/ic_motion.svg")),
+            _ => {}
+        }
 
         let log_image_container: Overlay = builder
             .object("log_image_container")
@@ -29,14 +39,6 @@ impl LogImageListItem {
             .object("image")
             .expect("Couldn't find 'image' in log_list_item.ui");
         image.set_from_file(Some(&file));
-        //image.set_can_shrink(true);
-
-        /*
-        match Texture::from_file(&File::for_path(file)) {
-            Ok(tex) => image.set_paintable(Some(&tex)),
-            Err(err) => eprintln!("Failed to load JPEG: {err}"),
-        }
-        */
 
         let time: Label = builder
             .object("time")

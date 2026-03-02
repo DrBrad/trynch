@@ -21,6 +21,9 @@
 
         <file alias="res/icons/ic_keyboard.svg">res/icons/ic_keyboard.svg</file>
         <file alias="res/icons/ic_usb.svg">res/icons/ic_usb.svg</file>
+        <file alias="res/icons/ic_capture.svg">res/icons/ic_capture.svg</file>
+        <file alias="res/icons/ic_motion.svg">res/icons/ic_motion.svg</file>
+        <file alias="res/icons/ic_mic.svg">res/icons/ic_mic.svg</file>
 
         <file alias="res/ui/logs_view.ui" preprocess="xml-stripblanks">res/ui/gtk4/logs_view.ui</file>
         <file alias="res/ui/logs_view.css">res/ui/gtk4/logs_view.css</file>

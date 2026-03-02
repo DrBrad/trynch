@@ -1,11 +1,28 @@
-
 #logs_list {
     padding: 10px;
+    background-color: @background_secondary;
 }
 
 #logs_list row {
     all: unset;
     margin: 1px 0;
+}
+
+#logs_list #icon {
+    padding: 10px;
+    border-radius: 50%;
+}
+
+#logs_list row.good #icon {
+    background-color: @green;
+}
+
+#logs_list row.warning #icon {
+    background-color: @yellow;
+}
+
+#logs_list row.severe #icon {
+    background-color: @red;
 }
 
 #logs_list #log_container {
@@ -15,6 +32,7 @@
 
 #logs_list #log_image_container {
     border-radius: 20px;
+    background-color: @background_shimmer;
 }
 
 #logs_list #log_container {

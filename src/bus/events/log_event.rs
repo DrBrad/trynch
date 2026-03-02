@@ -1,26 +1,32 @@
 use std::any::Any;
 use crate::bus::events::inter::event::Event;
+use crate::utils::detections::Detections;
+use crate::utils::severities::Severities;
 
 #[derive(Debug, Clone)]
-pub struct CameraEvent {
+pub struct LogEvent {
     prevent_default: bool,
-    pub(crate) file: String
+    pub(crate) log: String,
+    pub(crate) detection: Detections,
+    pub(crate) severity: Severities
 }
 
-impl CameraEvent {
+impl LogEvent {
 
-    pub fn new(file: String) -> Self {
+    pub fn new(log: String, detection: Detections, severity: Severities) -> Self {
         Self {
             prevent_default: false,
-            file
+            log,
+            detection,
+            severity
         }
     }
 }
 
-impl Event for CameraEvent {
+impl Event for LogEvent {
 
     fn get_name(&self) -> String {
-        String::from("camera_event")
+        String::from("log_event")
     }
 
     fn is_prevent_default(&self) -> bool {

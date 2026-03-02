@@ -3,20 +3,17 @@ use gtk4::{gdk, style_context_add_provider_for_display, Builder, CssProvider, La
 use gtk4::prelude::Cast;
 use crate::bus::event_bus::{pause_event, register_event, unregister_event};
 use crate::bus::event_bus::EventPropagation::Continue;
-use crate::bus::events::camera_event::CameraEvent;
-use crate::bus::events::key_event::KeyEvent;
-use crate::bus::events::usb_event::UsbEvent;
+use crate::bus::events::log_event::LogEvent;
 use crate::ui::gtk4::views::inter::stackable::Stackable;
 use crate::ui::gtk4::views::log_image_list_item::LogImageListItem;
 use crate::ui::gtk4::views::log_list_item::LogListItem;
 use crate::ui::gtk4::windows::main_window::MainWindow;
+use crate::utils::detections::Detections;
 
 pub struct LogsView {
     pub root: gtk4::Box,
     pub logs_list: ListBox,
-    key_event_listener: Option<RefCell<u32>>,
-    usb_event_listener: Option<RefCell<u32>>,
-    camera_event_listener: Option<RefCell<u32>>
+    log_event_listener: Option<RefCell<u32>>
 }
 
 impl LogsView {
@@ -59,57 +56,32 @@ impl LogsView {
 
 
 
-        let key_event_listener = Some(RefCell::new(register_event("key_event", {
+
+
+        let log_event_listener = Some(RefCell::new(register_event("log_event", {
             let logs_list = logs_list.clone();
 
             move |id, event| {
-                let event = event.as_any().downcast_ref::<KeyEvent>().unwrap();
+                let event = event.as_any().downcast_ref::<LogEvent>().unwrap();
 
-                let log = LogListItem::new(event.key.as_str());
-                logs_list.append(&log.root);
+                match event.detection {
+                    Detections::Keyboard | Detections::Usb => logs_list.append(&LogListItem::new(event.log.as_str(), event.detection, event.severity).root),
+                    Detections::Capture | Detections::Motion => logs_list.append(&LogImageListItem::new(event.log.as_str(), event.detection, event.severity).root),
+                    Detections::Mic => {}
+                }
 
                 Continue
             }
         }, false)));
 
 
-        let usb_event_listener = Some(RefCell::new(register_event("usb_event", {
-            let logs_list = logs_list.clone();
-
-            move |id, event| {
-                let event = event.as_any().downcast_ref::<UsbEvent>().unwrap();
-
-                let log = LogListItem::new(event.name.as_str());
-                logs_list.append(&log.root);
-
-                Continue
-            }
-        }, false)));
-
-
-        let camera_event_listener = Some(RefCell::new(register_event("camera_event", {
-            let logs_list = logs_list.clone();
-
-            move |id, event| {
-                let event = event.as_any().downcast_ref::<CameraEvent>().unwrap();
-
-                let log = LogImageListItem::new(event.file.as_str());
-                logs_list.append(&log.root);
-
-                Continue
-            }
-        }, false)));
-
-
-        let log = LogImageListItem::new("motion_20260301_163902.981.png");
-        logs_list.append(&log.root);
+        //let log = LogImageListItem::new("motion_20260301_170134.985.png", Detections::Capture, Severities::Severe);
+        //logs_list.append(&log.root);
 
         Self {
             root,
             logs_list,
-            key_event_listener,
-            usb_event_listener,
-            camera_event_listener
+            log_event_listener
         }
     }
 }
@@ -133,30 +105,14 @@ impl Stackable for LogsView {
     }
 
     fn on_pause(&self) {
-        if let Some(key_event_listener) = &self.key_event_listener {
-            pause_event("key_event", *key_event_listener.borrow());
-        }
-
-        if let Some(usb_event_listener) = &self.usb_event_listener {
-            pause_event("usb_event", *usb_event_listener.borrow());
-        }
-
-        if let Some(camera_event_listener) = &self.camera_event_listener {
-            pause_event("camera_event", *camera_event_listener.borrow());
+        if let Some(log_event_listener) = &self.log_event_listener {
+            pause_event("log_event", *log_event_listener.borrow());
         }
     }
 
     fn on_destroy(&self) {
-        if let Some(key_event_listener) = &self.key_event_listener {
-            unregister_event("key_event", *key_event_listener.borrow());
-        }
-
-        if let Some(usb_event_listener) = &self.usb_event_listener {
-            unregister_event("usb_event", *usb_event_listener.borrow());
-        }
-
-        if let Some(camera_event_listener) = &self.camera_event_listener {
-            unregister_event("camera_event", *camera_event_listener.borrow());
+        if let Some(log_event_listener) = &self.log_event_listener {
+            unregister_event("log_event", *log_event_listener.borrow());
         }
     }
 }

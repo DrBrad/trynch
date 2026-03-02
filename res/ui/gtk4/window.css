@@ -3,8 +3,24 @@
     text-shadow: none;
 }
 
+window {
+    background-color: @background;
+}
+
+menubar {
+    background-color: @background;
+    border-bottom: solid 1px @background_secondary;
+}
+
+
+
+
+
+
+
 #navigation_list {
     padding: 20px;
+    background-color: @background;
 }
 
 #navigation_list row {
@@ -15,7 +31,6 @@
 #navigation_list row label {
     font-size: 16px;
 }
-
 
 
 #bottom_bar {
@@ -70,11 +85,10 @@ window.release #bottom_bar #license {
 #bottom_bar #warning.severe {
     background-image: url('../icons/ic_status_severe.svg');
 }
+
+
+
 /*
-window {
-    border: none;
-    background-color: transparent;
-}
 
 #main_window {
     background-color: #00000080;

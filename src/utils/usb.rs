@@ -2,18 +2,20 @@ use std::thread;
 use std::time::Duration;
 use rusb::{Context, Device, HotplugBuilder, UsbContext};
 use crate::bus::event_bus::send_event;
-use crate::bus::events::usb_event::UsbEvent;
+use crate::bus::events::log_event::LogEvent;
+use crate::utils::detections::Detections;
+use crate::utils::severities::Severities;
 
 pub struct HotplugHandler;
 
 impl<T: UsbContext> rusb::Hotplug<T> for HotplugHandler {
 
     fn device_arrived(&mut self, device: Device<T>) {
-        send_event(Box::new(UsbEvent::new(format!("[+] {}", device_pretty_name(&device)))));
+        send_event(Box::new(LogEvent::new(format!("[+] {}", device_pretty_name(&device)), Detections::Usb, Severities::Warning)));
     }
 
     fn device_left(&mut self, device: Device<T>) {
-        send_event(Box::new(UsbEvent::new(format!("[-] {}", device_pretty_name(&device)))));
+        send_event(Box::new(LogEvent::new(format!("[-] {}", device_pretty_name(&device)), Detections::Usb, Severities::Warning)));
     }
 }
 
