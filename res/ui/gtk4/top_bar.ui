@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <requires lib="gtk+" version="4.0"/>
+
+    <object class="GtkBox" id="root">
+        <property name="name">top_bar</property>
+        <property name="visible">True</property>
+        <property name="hexpand">True</property>
+        <property name="orientation">horizontal</property>
+        <property name="spacing">30</property>
+        <property name="height-request">30</property>
+
+        <child>
+            <object class="GtkButton" id="run">
+                <property name="name">run</property>
+                <property name="tooltip-text">Run / Stop</property>
+                <property name="visible">True</property>
+                <property name="width-request">22</property>
+                <property name="height-request">22</property>
+            </object>
+        </child>
+
+        <child>
+            <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+            </object>
+        </child>
+    </object>
+</interface>

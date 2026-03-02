@@ -9,10 +9,13 @@ window {
 
 menubar {
     background-color: @background;
-    border-bottom: solid 1px @background_secondary;
 }
 
 
+
+#top_bar {
+    border-bottom: solid 1px @background_secondary;
+}
 
 
 

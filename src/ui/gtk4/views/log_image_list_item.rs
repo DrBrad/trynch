@@ -1,4 +1,5 @@
 use std::time::Duration;
+use chrono::Local;
 use gtk4::{Builder, Image, Label, ListBoxRow, Overlay};
 use gtk4::prelude::{StyleContextExt, WidgetExt};
 use crate::ui::gtk4::widgets::rounded_picture::RoundedPicture;
@@ -44,7 +45,7 @@ impl LogImageListItem {
         let time: Label = builder
             .object("time")
             .expect("Couldn't find 'time' in log_list_item.ui");
-        time.set_label("10:05 AM");
+        time.set_label(&Local::now().format("%-I:%M %p").to_string());
 
         Self {
             root,

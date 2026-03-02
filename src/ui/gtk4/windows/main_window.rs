@@ -8,6 +8,7 @@ use crate::ui::gtk4::views::bottom_bar::BottomBar;
 use crate::ui::gtk4::views::inter::stackable::Stackable;
 use crate::ui::gtk4::views::logs_view::LogsView;
 use crate::ui::gtk4::views::navigation_list_item::NavigationListItem;
+use crate::ui::gtk4::views::top_bar::TopBar;
 
 #[derive(Clone)]
 pub struct MainWindow {
@@ -45,6 +46,9 @@ impl MainWindow {
             .object("root")
             .expect("Failed to get the 'root' from window.ui");
 
+        let top_bar = TopBar::new();
+        root.prepend(&top_bar.root);
+
         let bottom_bar = BottomBar::new();
         root.append(&bottom_bar.root);
 
@@ -60,12 +64,9 @@ impl MainWindow {
         navigation_list.append(&NavigationListItem::new("/trynch/rust/res/icons/ic_archive.svg", "Archive").root);
         navigation_list.append(&NavigationListItem::new("/trynch/rust/res/icons/ic_settings.svg", "Settings").root);
 
-
-
-
-
-
-
+        if let Some(first_row) = navigation_list.row_at_index(0) {
+            navigation_list.select_row(Some(&first_row));
+        }
 
 
         let stack: Stack = builder
