@@ -4,13 +4,17 @@ mod ui;
 mod bus;
 mod utils;
 
+use std::sync::Arc;
+use std::sync::atomic::AtomicBool;
 use crate::ui::gtk4::app::App;
 use crate::utils::{keyboard, usb, camera};
+
+pub static RUNNING: AtomicBool = AtomicBool::new(false);
 
 fn main() {
     keyboard::run();
     usb::run();
-    //camera::run();
+    camera::run();
 
     /*
     let mut reader = LogReader::open("logs/test.log").unwrap();

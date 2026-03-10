@@ -1,4 +1,5 @@
 use std::{fs, thread};
+use std::sync::atomic::Ordering;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use chrono::Local;
 use image::{ImageBuffer, Rgb};
@@ -7,6 +8,7 @@ use nokhwa::pixel_format::RgbFormat;
 use nokhwa::utils::{CameraIndex, RequestedFormat, RequestedFormatType};
 use crate::bus::event_bus::send_event;
 use crate::bus::events::log_event::LogEvent;
+use crate::RUNNING;
 use crate::utils::detections::Detections;
 use crate::utils::severities::Severities;
 
@@ -26,6 +28,11 @@ pub fn run() {
         let mut last_save = Instant::now() - cooldown;
 
         loop {
+            if !RUNNING.load(Ordering::Relaxed) {
+                //thread::sleep(cooldown);
+                continue;
+            }
+
             let frame = cam.frame().unwrap();
             let rgb = frame.decode_image::<RgbFormat>().unwrap();
             let w = frame.resolution().width();

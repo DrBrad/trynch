@@ -1,10 +1,13 @@
 use std::cell::RefCell;
+use std::sync::atomic::Ordering;
 use gtk4::{gdk, style_context_add_provider_for_display, Builder, CssProvider, Label, ListBox, ScrolledWindow, Widget};
 use gtk4::gio::SimpleAction;
+use gtk4::glib::property::PropertySet;
 use gtk4::prelude::{ActionMapExt, Cast, WidgetExt};
 use crate::bus::event_bus::{pause_event, register_event, resume_event, unregister_event};
 use crate::bus::event_bus::EventPropagation::Continue;
 use crate::bus::events::log_event::LogEvent;
+use crate::RUNNING;
 use crate::ui::gtk4::views::inter::stackable::Stackable;
 use crate::ui::gtk4::views::log_image_list_item::LogImageListItem;
 use crate::ui::gtk4::views::log_list_item::LogListItem;
@@ -70,6 +73,7 @@ impl LogsView {
             let log_event_listener = log_event_listener.clone();
 
             move |_, _| {
+                RUNNING.store(true, Ordering::Relaxed);
                 show_capture_bar.borrow()(true);
                 if let Some(log_event_listener) = &log_event_listener {
                     while let Some(child) = logs_list.first_child() {
@@ -88,6 +92,7 @@ impl LogsView {
             let log_event_listener = log_event_listener.clone();
 
             move |_, _| {
+                RUNNING.store(false, Ordering::Relaxed);
                 show_capture_bar.borrow()(false);
                 if let Some(log_event_listener) = &log_event_listener {
                     pause_event("log_event", *log_event_listener.borrow());
